@@ -1,0 +1,77 @@
+﻿@page "/transaction/{AccountId:int}/{Message}"
+@layout HomeLayout
+@inject NavigationManager _navManager
+
+<div class="">
+    <main class="container-card">
+        <section class="ui-card">
+            <div class="container-left-card">
+                <form class="credit-card-card" OnSubmit="SubmitHandler">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary class="text-danger" role="alert" />
+
+                    <div class="number-container-card">
+                        <label class="card-label">Card Number</label>
+                        <input class="card-number input" maxlength="19" placeholder="1234 5678 9101 1121" />
+
+                    </div>
+                    <div class="name-container-card">
+                        <label class="card-label">Sum</label>
+                        <input class="input name-text" maxlength="30" placeholder="0.00" />
+                    </div>
+
+                    <div class="transaction-btn">
+
+                        <button @onclick="SubmitHandler" class="btn-transaction">AGAIN</button>
+                    </div>
+                </form>
+
+                <h2 style="color:red;margin-top:20px;">@Message</h2>
+
+            </div>
+            <div class="container-right-card">
+                <div class="card-card">
+                    <div class="intern-card">
+                        <img class="approximation-card" src="https://i.ibb.co/qdZb9xy/aprox.png" alt="aprox" border="0">
+
+                        <div class="card-number-card">
+                            <div class="number-vl-card">1234 5678 9456 1234</div>
+                        </div>
+                        <div class="card-holder-card">
+                            <label>Holder</label>
+                            <div class="name-vl-card">NOAH JACOB</div>
+                        </div>
+                        <div class="card-infos-card">
+                            <div class="exp-card">
+                                <label>valid-thru</label>
+                                <div class="expiration-vl">02/40</div>
+                            </div>
+                            <div class="cvv-card">
+                                <label>CVV</label>
+                                <div class="cvv-vl">123</div>
+                            </div>
+                        </div>
+                        <img class="chip-card" src="https://i.ibb.co/HpmzQbf/chip.png" alt="chip" border="0">
+
+                    </div>
+                </div>
+
+
+            </div>
+
+        </section>
+
+    </main>
+</div>
+@code {
+    [Parameter]
+    public int AccountId { get; set; }
+    [Parameter]
+    public string Message { get; set; }
+
+
+    private void SubmitHandler()
+    {
+        _navManager.NavigateTo($"/transaction/{AccountId}");
+    }
+}

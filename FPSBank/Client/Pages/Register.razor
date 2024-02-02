@@ -1,0 +1,76 @@
+﻿@page "/register"
+@inject IUserService _userService
+@inject IBankAccountService _bankAccountService
+
+<div class="container-login">
+
+
+    <div class="form-box-login">
+        <h1>Sign Up</h1>
+        
+        <EditForm Model="registerRequest"  method="post" OnValidSubmit="RegisterUser" FormName="register">
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert" />
+
+
+            <div class="input-group-login">
+                <div class="input-field-login">
+                    <i class="fa-solid fa-user"></i>
+
+                    <InputText @bind-Value="registerRequest.FullName" class="input" autocomplete="fullname" aria-required="true" placeholder="Full Name" />
+                    @*<ValidationMessage For="@(()=>registerRequest.FullName)"></ValidationMessage>*@
+                </div>
+            </div>
+
+            <div class="input-group-login">
+                <div class="input-field-login">
+                    <i class="fa-solid fa-envelope"></i>
+                    <InputText @bind-Value="registerRequest.Email" class="input" autocomplete="username" aria-required="true" placeholder="Email" />
+               @*     <ValidationMessage For="@(()=>registerRequest.Email)"></ValidationMessage>*@
+                </div>
+            </div>
+
+            <div class="input-group-login">
+                <div class="input-field-login">
+                    <i class="fa-solid fa-lock"></i>
+                    <InputText type="password" @bind-Value="registerRequest.Password" class="input" autocomplete="current-password" aria-required="true" placeholder="Password" />
+                   @* <ValidationMessage For="@(()=>registerRequest.Password)"></ValidationMessage>*@
+                </div>
+            </div>
+
+            <div class="input-group-login">
+                <div class="input-field-login">
+                    <i class="fa-solid fa-lock"></i>
+                    <InputText type="password" @bind-Value="registerRequest.ConfirmPassword" class="input" autocomplete="new-password" aria-required="true" placeholder="Password" />
+                   @* <ValidationMessage For="@(()=>registerRequest.ConfirmPassword)"></ValidationMessage>*@
+                </div>
+            </div>
+            <NavLink href="Account/Login">
+                <button class="reg-btn">Login</button>
+            </NavLink>
+            <div class="btn-login">
+                <button type="submit">Register!</button>
+            </div>
+
+        </EditForm>
+    </div>
+
+
+</div>
+
+@code {
+    private RegisterRequest registerRequest = new();
+    private BankAccount bankAccount = new();
+
+    private async Task RegisterUser()
+    {
+        bankAccount.FullName = registerRequest.FullName;
+        bankAccount.Email = registerRequest.Email;
+
+
+        await _userService.Register(registerRequest);
+
+        _bankAccountService.CreateAccount(bankAccount);
+    }
+
+}

@@ -1,0 +1,28 @@
+﻿@inject BankAccountService _bankAccountService
+
+<div class="row">
+    <div class="col-5 col-md-3 text-end">Last Name :</div>
+    <InputNumber class="col-7 col-md-9" @bind-Value="sum"></InputNumber>
+</div>
+
+<Button class="mt-3" Color="ButtonColor.Success" Type="ButtonType.Button" @onclick="OnClickCallback">
+    Add Balance
+</Button>
+
+@code {
+    private BankAccount bankAccount;
+    private decimal sum = 0;
+
+    [Parameter] public int BankAccountId { get; set; }
+
+    [Parameter] public EventCallback<MouseEventArgs> OnClickCallback { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // get employee with {EmployeeId} from DB
+
+        bankAccount = await _bankAccountService.GetAccountById(BankAccountId);
+
+        base.OnInitialized();
+    }
+}

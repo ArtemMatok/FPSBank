@@ -1,0 +1,190 @@
+﻿@page "/credit/{AccountId:int}"
+@layout HomeLayout
+@inject IBankAccountService _bankAccount
+@inject NavigationManager _navManager
+
+<Modal @ref="modal" title="Credit" UseStaticBackdrop="true" CloseOnEscape="false">
+    <BodyTemplate>
+        <p>
+            Are you in need of financial assistance to meet your personal or business goals? Our loan offering of 100,000 Ukrainian Hryvnia is designed to provide you with the necessary funds to fulfill your aspirations.
+            <br />Loan Features:
+
+            <br />Loan Amount: 100,000 UAH
+            <br />Interest Rate: Competitive rates tailored to suit your financial circumstances.
+            <br />Repayment Terms: Flexible repayment options with customizable schedules.
+            <br />Purpose: Utilize the funds for various purposes such as home improvement, education, debt consolidation, or any other personal or business needs.
+            <br />Advantages of Choosing Our Loan:
+
+            <br />Quick Approval: 
+            <br />Our streamlined application process ensures a prompt response, getting you closer to your financial goals.
+            <br />Competitive Interest Rates: Benefit from competitive and transparent interest rates to make your repayment journey more manageable.
+            <br />Flexible Repayment: We understand that financial situations can vary, so we offer flexible repayment plans to accommodate your unique needs.
+            <br />Transparent Terms: Our commitment to transparency means no hidden fees or surprise charges. You'll have a clear understanding of your repayment obligations.
+        </p>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="OnHideModalClick">Close</Button>
+        <Button Color="ButtonColor.Primary" @onclick="()=>AddCredit(100000)">Take credit</Button>
+    </FooterTemplate>
+</Modal>
+
+<Modal @ref="modal2" title="Credit" UseStaticBackdrop="true" CloseOnEscape="false">
+    <BodyTemplate>
+        <p>
+            Are you searching for a financial solution to meet your immediate needs or accomplish personal and financial goals? Our loan offering of 50,000 Ukrainian Hryvnia is tailored to provide the financial support you require.
+
+            <br />Loan Features:
+
+            <br />Loan Amount: 50,000 UAH
+            <br />Interest Rate: Enjoy competitive interest rates designed to suit your financial situation.
+            <br />Repayment Terms: Choose from flexible repayment plans that align with your financial capacity.
+            <br />Purpose: Use the loan for various purposes, including home improvements, education, debt consolidation, or any other personal or business requirements.
+            <br />Advantages of Choosing Our Loan:
+
+            <br />Swift Approval: Our streamlined application process ensures a quick response, allowing you to access funds promptly.
+            <br />Competitive Interest Rates: Benefit from transparent and competitive interest rates, making repayment more manageable.
+            <br />Flexible Repayment: We understand that financial circumstances vary, offering flexibility in repayment schedules to suit your needs.
+            <br />Transparent Terms: No hidden fees or surprises; our commitment to transparency ensures you understand your repayment obligations clearly.
+        </p>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="OnHideModalClick2">Close</Button>
+        <Button Color="ButtonColor.Primary" @onclick="()=>AddCredit(50000)">Take credit</Button>
+    </FooterTemplate>
+</Modal>
+
+<Modal @ref="modal3" title="Credit" UseStaticBackdrop="true" CloseOnEscape="false">
+    <BodyTemplate>
+        <p>
+            Are you in search of a financial boost to address immediate needs or fulfill specific financial objectives? Our loan option of 10,000 Ukrainian Hryvnia is tailored to provide the financial assistance you require.
+
+            <br />Loan Features:
+
+            <br />Loan Amount: 10,000 UAH
+            <br />Competitive Interest Rates: Enjoy competitive and transparent interest rates designed to accommodate various financial situations.
+            <br />Flexible Repayment Terms: Choose from flexible repayment plans that align with your financial capacity, making the repayment process more convenient.
+            <br />Versatile Use: Utilize the loan for a range of purposes, including unexpected expenses, small purchases, or any other personal financial requirements.
+            <br />Advantages of Choosing Our Loan:
+
+            <br />Quick Approval Process: Our streamlined application process ensures a rapid response, allowing you to access funds promptly.
+            <br />Transparent Interest Rates: Benefit from clear and competitive interest rates, facilitating a straightforward understanding of your financial commitments.
+            <br />Convenient Repayment Options: Tailor your repayment schedule to match your financial situation, offering convenience and ease.
+            <br />Accessible Application: Apply conveniently online, providing a hassle-free experience from the comfort of your own home.
+        </p>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="OnHideModalClick3">Close</Button>
+        <Button Color="ButtonColor.Primary" @onclick="()=>AddCredit(10000)">Take credit</Button>
+    </FooterTemplate>
+</Modal>
+
+
+
+
+
+<div class="insights">
+    <div @onclick="OnShowModalClick" class="golden-card">
+
+        <div class="middle">
+            <div class="left">
+                <h3>Golden Card</h3>
+                <h1>100 000грн</h1>
+            </div>
+
+        </div>
+        
+
+    </div>
+
+    <div @onclick="OnShowModalClick2" class="silver-card">
+        
+        <div class="middle">
+            <div class="left">
+                <h3>Silver Card</h3>
+                <h1>50 000грн</h1>
+            </div>
+        </div>
+    </div>
+
+    <div @onclick="OnShowModalClick3" class="bronze-card">
+
+        <div class="middle">
+            <div class="left">
+                <h3>Bronze Card</h3>
+                <h1>10 000грн</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@code {
+    [Parameter]
+    public int AccountId { get; set; }
+    private BankAccount bankAccount = new();
+
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        bankAccount = await _bankAccount.GetAccountById(AccountId);
+    }
+
+
+
+
+
+    #region Modal
+    private Modal modal = default!;
+    private Modal modal2 = default!;
+    private Modal modal3 = default!;
+    private string fontSizeClass;
+
+    private async Task OnShowModalClick()
+    {
+        await modal.ShowAsync();
+    }
+
+    private async Task OnHideModalClick()
+    {
+        await modal.HideAsync();
+        fontSizeClass = "h1-increase";
+    }
+
+    private async Task OnShowModalClick2()
+    {
+        await modal2.ShowAsync();
+    }
+
+    private async Task OnHideModalClick2()
+    {
+        await modal2.HideAsync();
+        fontSizeClass = "h1-increase";
+    }
+
+    private async Task OnShowModalClick3()
+    {
+        await modal3.ShowAsync();
+    }
+
+    private async Task OnHideModalClick3()
+    {
+        await modal3.HideAsync();
+        fontSizeClass = "h1-increase";
+    }
+    #endregion
+
+
+    private async Task AddCredit(decimal sum)
+    {
+        bankAccount.CreditCard.Sum += sum;
+        bankAccount.MainCard.Sum += sum;
+        
+        await _bankAccount.UpdateCredit(AccountId, bankAccount);
+        _navManager.NavigateTo($"home/{bankAccount.Email}");
+    }
+}

@@ -1,0 +1,493 @@
+﻿@page "/home/{Email}"
+@layout HomeLayout
+@inject NavigationManager _navManager
+@inject IBankAccountService _bankAccountSerivce
+@inject AuthenticationStateProvider authStateProvider
+@inject NavigationManager navManager
+@*<PageTitle>Home</PageTitle>
+
+
+    <div class="container-bar">
+        <aside>
+            <div class="top-bar">
+                <div class="logo-bar">
+                    <img src="https://i.ibb.co/mDwCnmV/473510a9-a969-4d00-ac21-103d648c33a3-removebg-preview-1.png" alt="473510a9-a969-4d00-ac21-103d648c33a3-removebg-preview-1" border="0">
+                    <h2 class="name-bank">FPS<span class="text-muted">Bank</span></h2>
+                </div>
+                <div class="close-bar">
+                    <i class="fa-solid fa-xmark"></i>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <a class="active">
+                    <i class="fa-solid fa-table-columns"></i>
+                    <h3>Dashboard</h3>
+                </a>
+
+                    <a @onclick="Transaction">
+                        <i class="fa-regular fa-credit-card"></i>
+                        <h3>Cards</h3>
+                    </a>
+
+                    <a>
+                        <i class="fa-solid fa-money-check-dollar"></i>
+                        <h3>Credits</h3>
+                    </a>
+
+
+
+
+                    <a @onclick="Logout" href="javascript:void(0)">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <h3>Logout</h3>
+                    </a>
+
+
+            </div>
+        </aside>
+        <main class="body-main" style="width:100vw;padding-left:20px">
+            <h1>Dashboard</h1>
+
+            <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
+
+
+            <Modal @ref="modal" title="Add to balance" UseStaticBackdrop="true" CloseOnEscape="false">
+                <BodyTemplate>
+                    <div class="add-balance">
+                        <InputNumber min="1" max="1000000" class="add-balance-input" @bind-Value="sum"></InputNumber>
+                    </div>
+                </BodyTemplate>
+                <FooterTemplate>
+                    <Button Color="ButtonColor.Secondary" @onclick="OnHideModalClick">Close</Button>
+                    <Button Color="ButtonColor.Primary" @onclick="()=>addBalance(sum)">Add to balance</Button>
+                </FooterTemplate>
+            </Modal>
+
+            <div class="insights">
+                <div class="main-card">
+                    <i class="fa-brands fa-cc-mastercard"></i>
+                    <div class="middle">
+                        <div class="left">
+                            <h3>Main Card</h3>
+                            <h1 class="@sumMain">@formatedSum</h1>
+                        </div>
+
+                    </div>
+                    <Button style="font-size:2.2rem;" @onclick="OnShowModalClick"><i class="fa-regular fa-plus"></i></Button>
+
+                </div>
+
+                <div class="dollar-card">
+                    <i class="fa-solid fa-money-check-dollar"></i>
+                    <div class="middle">
+                        <div class="left">
+                            <h3>Dollar Card</h3>
+                            <h1>5 000 $</h1>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="credit-card">
+                    <i class="fa-regular fa-credit-card"></i>
+                    <div class="middle">
+                        <div class="left">
+                            <h3>Credit Card</h3>
+                            <h1>0 грн</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recent-operation">
+                <h2>Recent Operation</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name Operation</th>
+                            <th>Card Number</th>
+                            <th>Satus</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in accountOperations.OrderByDescending(x => x.Id).Take(5).ToList())
+                        {
+                            <tr>
+                                <td>@item.NameOperation</td>
+                                <td>@item.CardNumber</td>
+                                <td class="success">@item.StatusOperation</td>
+                                <td class="primary">
+                                    <Button Color="ButtonColor.Primary" @onclick="()=>ShowEmployeeComponent2(item.Id)">Details</Button>
+
+                                </td>
+                            </tr>
+                        }
+
+
+                    </tbody>
+                </table>
+                <a href="#">Show All</a>
+            </div>
+
+            <div class="recent-operation">
+                <h2>Transfer money</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name Operation</th>
+                            <th>Card Number</th>
+                            <th>Satus</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in transfersMoney.OrderByDescending(x => x.Id).Take(5).ToList())
+                        {
+                            <tr>
+                                <td>@item.NameOperation</td>
+                                <td>@item.CardNumber</td>
+                                <td class="success">@item.StatusOperation</td>
+                                <td class="primary">
+                                    <Button Color="ButtonColor.Primary" @onclick="()=>ShowEmployeeComponent3(item.Id)">Details</Button>
+
+                                </td>
+                            </tr>
+                        }
+
+
+                    </tbody>
+                </table>
+                <a href="#">Show All</a>
+            </div>
+
+            <NavLink href="@transactionUrl">
+                <div style="text-decoration:none;" class="operation">
+                    <h3 style="text-decoration:none;"><i class="fa-solid fa-comments-dollar"></i>Transaction</h3>
+                </div>
+            </NavLink>
+
+            <Modal @ref="modal2" />
+            <Modal @ref="modal3" />
+
+        </main>
+    </div>*@
+
+<h1>Dashboard</h1>
+
+<Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
+
+
+<Modal @ref="modal" title="Add to balance" UseStaticBackdrop="true" CloseOnEscape="false">
+    <BodyTemplate>
+        <div class="add-balance">
+            <InputNumber min="1" max="1000000" class="add-balance-input" @bind-Value="sum"></InputNumber>
+        </div>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="OnHideModalClick">Close</Button>
+        <Button Color="ButtonColor.Primary" @onclick="()=>addBalance(sum)">Add to balance</Button>
+    </FooterTemplate>
+</Modal>
+
+
+<Modal @ref="modal4" title="Repay Credit" UseStaticBackdrop="true" CloseOnEscape="false">
+    <BodyTemplate>
+        <div class="add-balance">
+            <InputNumber min="1" max="@bankAccount.CreditCard.Sum" class="add-balance-input" @bind-Value="sum2"></InputNumber>
+        </div>
+        @if(messageCredit != null)
+        {
+            <h2 style="color:red;">@messageCredit</h2>
+        }
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="OnHideModalClick4">Close</Button>
+        <Button Color="ButtonColor.Primary" @onclick="()=>RepayCredit(sum2)">Repay</Button>
+    </FooterTemplate>
+</Modal>
+
+
+<div class="insights">
+    <div class="main-card">
+        
+        <div class="middle">
+            <div class="left">
+                <h3>Main Card</h3>
+                <h1 class="@sumMain">@formatedSum</h1>
+            </div>
+
+        </div>
+        <Button style="font-size:2.2rem;" @onclick="OnShowModalClick"><i class="fa-regular fa-plus"></i></Button>
+
+    </div>
+
+    <div class="dollar-card">
+        
+        <div class="middle">
+            <div class="left">
+                <h3>Dollar Card</h3>
+                <h1>@formatedSumDollar</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="credit-card">
+
+        <div class="middle">
+            <div class="left">
+                <h3>Credit Card</h3>
+                <h1>@formatedSumCredit </h1>
+            </div>
+        </div>
+        <Button style="font-size:2.2rem;" @onclick="OnShowModalClick4"><i class="fa-regular fa-plus"></i></Button>
+    </div>
+</div>
+
+<div class="recent-operation">
+    <h2>Recent Operation</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Name Operation</th>
+                <th>Card Number</th>
+                <th>Satus</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in accountOperations.OrderByDescending(x => x.Id).Take(5).ToList())
+            {
+                <tr>
+                    <td>@item.NameOperation</td>
+                    <td>@item.CardNumber</td>
+                    <td class="success">@item.StatusOperation</td>
+                    <td class="primary">
+                        <Button Color="ButtonColor.Primary" @onclick="()=>ShowEmployeeComponent2(item.Id)">Details</Button>
+
+                    </td>
+                </tr>
+            }
+
+
+        </tbody>
+    </table>
+    <a href="#">Show All</a>
+</div>
+
+<div class="recent-operation">
+    <h2>Transfer money</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Name Operation</th>
+                <th>Card Number</th>
+                <th>Satus</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in transfersMoney.OrderByDescending(x => x.Id).Take(5).ToList())
+            {
+                <tr>
+                    <td>@item.NameOperation</td>
+                    <td>@item.CardNumber</td>
+                    <td class="success">@item.StatusOperation</td>
+                    <td class="primary">
+                        <Button Color="ButtonColor.Primary" @onclick="()=>ShowEmployeeComponent3(item.Id)">Details</Button>
+
+                    </td>
+                </tr>
+            }
+
+
+        </tbody>
+    </table>
+    <a href="#">Show All</a>
+</div>
+
+
+
+<Modal @ref="modal2" />
+<Modal @ref="modal3" />
+
+
+
+
+@code{
+
+
+
+    [Parameter]
+    public string Email { get; set; }
+    private BankAccount bankAccount = new BankAccount();
+    private decimal sum = 0;
+    private decimal sum2 = 0;
+    private string formatedSum;
+    private string formatedSumCredit;
+    private string formatedSumDollar;
+
+    private string messageCredit;
+
+    private string sumMain => bankAccount.MainCard.Sum > 1000000 ? "sum-main" : "";
+    private List<AccountOperation> accountOperations = new List<AccountOperation>();
+    private string transactionUrl => $"transaction/{bankAccount.Id}";
+    private List<TransferMoney> transfersMoney = new List<TransferMoney>();
+
+
+    protected async override Task OnInitializedAsync()
+    {
+
+        bankAccount = await _bankAccountSerivce.GetAccountByEmail(Email);
+
+        formatedSum = FormatAmount(bankAccount.MainCard.Sum);
+        formatedSumCredit = FormatAmount(bankAccount.CreditCard.Sum);
+        formatedSumDollar = FormatAmountDollar(bankAccount.DollarCard.Sum);
+        accountOperations = bankAccount.AccountOperations;
+        transfersMoney = bankAccount.TransfersMoney;
+
+
+        _navManager.NavigateTo($"home/{Email}");
+        StateHasChanged();
+    }
+
+    static string FormatAmount(decimal amount)
+    {
+        // Використовуємо "N0" для форматування як ціле число з роздільниками тисяч
+        string formattedAmount = amount.ToString("N0") + " грн";
+        return formattedAmount;
+    }
+    static string FormatAmountDollar(decimal amount)
+    {
+        // Використовуємо "N0" для форматування як ціле число з роздільниками тисяч
+        string formattedAmount = amount.ToString("N0") + " $";
+        return formattedAmount;
+    }
+
+    private async Task addBalance(decimal sum)
+    {
+        PreOperation preOperation = new PreOperation(bankAccount.MainCard.NumberCard, bankAccount.MainCard.Sum, sum, "Add to Balance");
+
+
+        bankAccount.MainCard.Sum += sum;
+
+        formatedSum = FormatAmount(bankAccount.MainCard.Sum);
+        _bankAccountSerivce.UpdateBalance(bankAccount.Id, bankAccount);
+        var operation = await _bankAccountSerivce.AddOparation(bankAccount.Id, preOperation);
+        accountOperations.Add(operation);
+        await modal.HideAsync();
+        ShowMessage(ToastType.Success);
+    }
+
+    #region Modal
+    private Modal modal = default!;
+    private string fontSizeClass;
+
+    private async Task OnShowModalClick()
+    {
+        await modal.ShowAsync();
+    }
+
+    private async Task OnHideModalClick()
+    {
+        await modal.HideAsync();
+        fontSizeClass = "h1-increase";
+    }
+    #endregion
+
+    #region Detail modal
+    private Modal modal2 = default!;
+    private string? message;
+
+    private async Task ShowEmployeeComponent2(int operationId)
+    {
+        var parameters = new Dictionary<string, object>();
+        parameters.Add("AccountId", bankAccount.Id);
+        parameters.Add("OperationId", operationId);
+        await modal2.ShowAsync<FPSBank.Client.Pages.Card.DetailOperation>(title: "Operation Details", parameters: parameters);
+    }
+    #endregion
+
+    #region Detail transfer model
+    private Modal modal3 = default!;
+    private string? message3;
+
+    private async Task ShowEmployeeComponent3(int transferMoneyId)
+    {
+        var parameters = new Dictionary<string, object>();
+        parameters.Add("AccountId", bankAccount.Id);
+        parameters.Add("TransferMoneyId", transferMoneyId);
+        await modal3.ShowAsync<FPSBank.Client.Pages.Card.DetailTransferMoney>(title: "Transfer Details", parameters: parameters);
+    }
+    #endregion
+
+    #region Toast
+    List<ToastMessage> messages = new List<ToastMessage>();
+
+    private void ShowMessage(ToastType toastType) => messages.Add(CreateToastMessage(toastType));
+
+    private ToastMessage CreateToastMessage(ToastType toastType)
+    => new ToastMessage
+    {
+        Type = toastType,
+        Title = "Add to balance",
+        HelpText = $"{DateTime.Now}",
+        Message = $"Add to balance. DateTime: {DateTime.Now}",
+    };
+    #endregion
+
+
+    private async Task Logout()
+    {
+        var customAuthStateProvider = (FPSBank.Client.Authentication.CustomAuthenticationStateProvider)authStateProvider;
+        await customAuthStateProvider.UpdateAuthenticationState(null);
+        navManager.NavigateTo("/", true);
+    }
+
+    private void Transaction()
+    {
+        _navManager.NavigateTo($"{transactionUrl}");
+    }
+
+
+
+
+    #region Modal Credit
+    private Modal modal4 = default!;
+    private string fontSizeClass4;
+
+    private async Task OnShowModalClick4()
+    {
+        await modal4.ShowAsync();
+    }
+
+    private async Task OnHideModalClick4()
+    {
+        await modal4.HideAsync();
+        fontSizeClass4 = "h1-increase";
+    }
+    #endregion
+
+
+    private async  Task RepayCredit(decimal sum)
+    {
+        if(bankAccount.MainCard.Sum<sum)
+        {
+            messageCredit = "You have not enough mopney";
+        }
+        else if(bankAccount.CreditCard.Sum == 0)
+        {
+            messageCredit = null;
+            messageCredit = "You have not credit money";
+        }
+        else
+        {
+            messageCredit = null;
+            bankAccount.MainCard.Sum -= sum;
+            bankAccount.CreditCard.Sum -= sum;
+            formatedSum = FormatAmount(bankAccount.MainCard.Sum);
+            formatedSumCredit = FormatAmount(bankAccount.CreditCard.Sum);
+
+            _bankAccountSerivce.UpdateRepayCredit(bankAccount.Id, bankAccount);
+            await modal4.HideAsync();
+        }
+
+
+    }
+}

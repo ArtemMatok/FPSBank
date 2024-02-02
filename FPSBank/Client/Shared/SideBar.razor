@@ -1,0 +1,117 @@
+﻿@using FPSBank.Client.Authentication
+
+@inject AuthenticationStateProvider authStateProvider
+@inject NavigationManager navManager
+
+<aside>
+    <div class="top-bar">
+        <div class="logo-bar">
+            <img src="https://i.ibb.co/mDwCnmV/473510a9-a969-4d00-ac21-103d648c33a3-removebg-preview-1.png" alt="473510a9-a969-4d00-ac21-103d648c33a3-removebg-preview-1" border="0">
+            <h2 class="name-bank">FPS<span class="text-muted">Bank</span></h2>
+        </div>
+        <div class="close-bar">
+            <i class="fa-solid fa-xmark"></i>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <a class="@link1" @onclick="Home">
+            <i class="fa-solid fa-table-columns"></i>
+            <h3>Dashboard</h3>
+        </a>
+
+        <a class="@link2" @onclick="Transaction">
+            <i class="fa-solid fa-comments-dollar"></i>
+            <h3>Transaction</h3>
+        </a>
+
+        <a class="@link3" @onclick="Credit">
+            <i class="fa-solid fa-money-check-dollar"></i>
+            <h3>Credits</h3>
+        </a>
+
+        <a class="@link4" @onclick="Exchange">
+            <i class="fa-solid fa-dollar-sign"></i>
+            <h3>Currency</h3>
+        </a>
+
+
+
+        <a @onclick="Logout" href="javascript:void(0)">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <h3>Logout</h3>
+        </a>
+
+
+    </div>
+</aside>
+
+
+
+
+
+@code {
+    [Parameter]
+    public BankAccount bankAccount { get; set; }
+    private bool isLink1 = false;
+    private bool isLink2 = false;
+    private bool isLink3 = false;
+    private bool isLink4 = false;
+    private string link1 => isLink1 == true ? "active" : "";
+    private string link2 => isLink2 == true ? "active" : "";
+    private string link3 => isLink3 == true ? "active" : "";
+    private string link4 => isLink4 == true ? "active" : "";
+
+
+
+
+    private async Task Logout()
+    {
+        var customAuthStateProvider = (CustomAuthenticationStateProvider)authStateProvider;
+        await customAuthStateProvider.UpdateAuthenticationState(null);
+        navManager.NavigateTo("/", true);
+    }
+
+    private void Transaction()
+    {
+
+        var urlString = $"transaction/{bankAccount.Id}";
+        navManager.NavigateTo(urlString);
+        isLink1 = false;
+        isLink2 = true;
+        isLink3 = false;
+        StateHasChanged();
+    }
+
+    private void Home()
+    {
+        var urlString = $"home/{bankAccount.Email}";
+        navManager.NavigateTo(urlString);
+        isLink1 = true;
+        isLink2 = false;
+        isLink3 = false;
+        isLink4 = false;
+        StateHasChanged();
+    }
+
+    private void Credit()
+    {
+        var urlString = $"credit/{bankAccount.Id}";
+        navManager.NavigateTo(urlString);
+        isLink1 = false;
+        isLink2 = false;
+        isLink3 = true;
+        isLink4 = false;
+    }
+
+    private void Exchange()
+    {
+        var urlString = $"exchangeCurrency/{bankAccount.Id}";
+        navManager.NavigateTo(urlString);
+        isLink1 = false;
+        isLink2 = false;
+        isLink3 = false;
+        isLink4 = true;
+    }
+
+}

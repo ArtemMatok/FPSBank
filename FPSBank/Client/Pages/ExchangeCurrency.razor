@@ -1,0 +1,62 @@
+﻿@page "/exchangeCurrency/{AccountId:int}"
+@inject IBankAccountService _bankAccountService
+@layout HomeLayout
+@inject NavigationManager _navManager
+
+<h1 style="margin-bottom:70px;">Exchange currency</h1>
+
+<div class="exchange-currency">
+    <div class="dollar-currency">
+        <h2 style="color:black">Dollar</h2>
+        <InputNumber class="dollar-input" @bind-Value="dollar"></InputNumber>
+    </div>
+    <div class="grn-currency">
+        <h2 style="color:black">Gryvna</h2>
+        <h2>@grn</h2>
+    </div>
+
+    <button @onclick="SubmitHandler" class="btn-exchange">Exchange Money</button>
+
+</div>
+@if (message is not null)
+{
+    <h2 style="color:red;">@message</h2>
+}
+
+@code {
+    [Parameter]
+    public int AccountId { get; set; }
+    private BankAccount bankAccount = new();
+    private decimal dollar;
+    private string grn => FormatAmount(dollar * 38);
+    private decimal grnSum => dollar * 38;
+    private string message;
+
+    static string FormatAmount(decimal amount)
+    {
+        // Використовуємо "N0" для форматування як ціле число з роздільниками тисяч
+        string formattedAmount = amount.ToString("N0") + " грн";
+        return formattedAmount;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        bankAccount = await _bankAccountService.GetAccountById(AccountId);
+    }
+
+
+    private async void SubmitHandler()
+    {
+        if (bankAccount.DollarCard.Sum < dollar)
+        {
+            message = "You have not enough money in your Dollar Card";
+        }
+        else
+        {
+            PreExchangeMoney preExchangeMoney = new PreExchangeMoney(grnSum, dollar); ;
+            await _bankAccountService.ExchangeMoney(AccountId, preExchangeMoney);
+            _navManager.NavigateTo($"home/{bankAccount.Email}");
+        }
+
+    }
+}

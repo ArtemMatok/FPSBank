@@ -1,0 +1,48 @@
+﻿@inject ITransferMoneyService _transferMoneyService
+<div class="detail-operation">
+    <div class="row">
+        <div class="col-5 col-md-3 text-end operation-text" style="font-size:12px;">Full name :</div>
+        <div class="col-7 col-md-9">@transferMoney.FullName</div>
+    </div>
+    <div class="row">
+        <div class="col-5 col-md-3 text-end operation-text" style="font-size:12px;">Name Operation :</div>
+        <div class="col-7 col-md-9">@transferMoney.NameOperation</div>
+    </div>
+    <div class="row">
+        <div class="col-5 col-md-3 text-end operation-text" style="font-size:1.1rem">Card Number :</div>
+        <div class="col-7 col-md-9">@transferMoney.CardNumber</div>
+    </div>
+    <div class="row">
+        <div class="col-5 col-md-3 text-end operation-text">Sum :</div>
+        <div class="col-7 col-md-9">@formatedSum</div>
+    </div>
+    <div class="row">
+        <div class="col-5 col-md-3 text-end operation-text" style="font-size:12px;">Status Operation :</div>
+        <div class="col-7 col-md-9">@transferMoney.StatusOperation</div>
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public int AccountId { get; set; }
+    [Parameter]
+    public int TransferMoneyId { get; set; }
+    private TransferMoney transferMoney = new();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        transferMoney = await _transferMoneyService.GetTransferMoneyById(AccountId, TransferMoneyId);
+        formatedSum = FormatAmount(transferMoney.Sum);
+
+    }
+    private string formatedSum;
+
+    static string FormatAmount(decimal amount)
+    {
+        // Використовуємо "N0" для форматування як ціле число з роздільниками тисяч
+        string formattedAmount = amount.ToString("N0") + " грн";
+        return formattedAmount;
+    }
+}

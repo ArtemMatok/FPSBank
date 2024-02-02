@@ -1,0 +1,100 @@
+﻿@page "/login"
+@using FPSBank.Client.Authentication
+@using FPSBank.Shared
+@using System.Net
+@using Microsoft.AspNetCore.Components.Authorization
+@using FPSBank.Shared.Models.User
+
+@inject IBankAccountService _bankAccountService
+@inject IUserService _userService
+@inject NavigationManager _navManager
+
+@*<div class="row">
+    <div class="col-lg-4 offset-lg-4 pt-4 pb-4 border">
+        <div class="mb-3 text-center">
+            <h3>LOGIN</h3>
+        </div>
+        <div class="mb-3">
+            <label>User Name</label>
+            <input @bind="loginRequest.UserName" class="form-control" placeholder="User Name" />
+        </div>
+        <div class="mb-3">
+            <label>Password</label>
+            <input @bind="loginRequest.Password" type="password" class="form-control" placeholder="Password" />
+        </div>
+        <div class="mb-3 d-grid gap-2">
+            <button @onclick="Authenticate" class="btn btn-primary">Login</button>
+        </div>
+    </div>
+</div>*@
+
+
+<div class="container-login">
+
+
+    <div class="form-box-login">
+        <h1>Sign Up</h1>
+
+
+        <EditForm Model="loginRequest" method="post" OnValidSubmit="Authenticate">
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert" />
+
+
+            <div class="input-group-login">
+                <div class="input-field-login">
+                    <i class="fa-solid fa-envelope"></i>
+                    <InputText @bind-Value="loginRequest.UserName" class="input" autocomplete="username" aria-required="true" placeholder="Email" />
+
+                </div>
+            </div>
+
+            <div class="input-group-login">
+                <div class="input-field-login">
+                    <i class="fa-solid fa-lock"></i>
+
+                    <InputText type="password" @bind-Value="loginRequest.Password" class="input" autocomplete="current-password" aria-required="true" placeholder="Password" />
+
+
+                </div>
+            </div>
+            <NavLink href="Account/Register">
+                <button class="reg-btn">Register</button>
+            </NavLink>
+            <div class="btn-login">
+                <button type="submit">Login!</button>
+            </div>
+
+        </EditForm>
+        @if (isSuccess)
+        {
+
+        }
+        else
+        {
+            <h2 style="color:red;">Incorect login or password</h2>
+        }
+    </div>
+
+
+</div>
+
+@code{
+    private LoginRequest loginRequest = new LoginRequest();
+    private bool isSuccess = true;
+
+    private async Task Authenticate()
+    {
+        if(await _userService.Login(loginRequest))
+        {
+            isSuccess = true;
+            BankAccountStatic.BankAccount = await _bankAccountService.GetAccountByEmail(loginRequest.UserName);
+            Console.WriteLine(BankAccountStatic.BankAccount.Email);
+            Console.WriteLine(BankAccountStatic.BankAccount.FullName);
+        }
+        else
+        {
+            isSuccess = false;
+        }
+    }
+}

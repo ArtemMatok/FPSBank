@@ -1,0 +1,281 @@
+﻿@page "/transaction/{AccountId:int}"
+@layout HomeLayout
+@inject IBankAccountService _bankAccountSerivce
+@inject NavigationManager _navManager
+@inject IBankAccountService _bankAccountService
+@inject AuthenticationStateProvider authStateProvider
+@using System.ComponentModel.DataAnnotations
+@*<div class="container-bar">
+        <aside>
+            <div class="top-bar">
+                <div class="logo-bar">
+                    <img src="https://i.ibb.co/mDwCnmV/473510a9-a969-4d00-ac21-103d648c33a3-removebg-preview-1.png" alt="473510a9-a969-4d00-ac21-103d648c33a3-removebg-preview-1" border="0">
+                    <h2 class="name-bank">FPS<span class="text-muted">Bank</span></h2>
+                </div>
+                <div class="close-bar">
+                    <i class="fa-solid fa-xmark"></i>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <a >
+                    <i class="fa-solid fa-table-columns"></i>
+                    <h3>Dashboard</h3>
+                </a>
+
+                    <a class="active">
+                        <i class="fa-regular fa-credit-card"></i>
+                        <h3>Cards</h3>
+                    </a>
+
+                <a>
+                    <i class="fa-solid fa-money-check-dollar"></i>
+                    <h3>Credits</h3>
+                </a>
+
+
+
+
+                <a @onclick="Logout" href="javascript:void(0)">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <h3>Logout</h3>
+                </a>
+
+
+            </div>
+        </aside>
+        <main class="body-main" style="width:100vw;padding-left:20px">
+            <div class="">
+                <main class="container-card">
+                    <section class="ui-card">
+                        <div class="container-left-card">
+                            <EditForm Model="preTransaction" class="credit-card-card" OnSubmit="SubmitHandler">
+                                <DataAnnotationsValidator />
+                                <ValidationSummary class="text-danger" role="alert" />
+
+                                <div class="number-container-card">
+                                    <label class="card-label">Card Number</label>
+                                    <InputText @bind-Value="formattedCardNumber" class="card-number input" maxlength="19" placeholder="1234 5678 9101 1121" @oninput="OnCardNumberChanged"></InputText>
+
+                                </div>
+                                <div class="name-container-card">
+                                    <label class="card-label">Sum</label>
+                                    <InputNumber @bind-Value="preTransaction.Sum" class="input name-text" maxlength="30" placeholder="0.00"></InputNumber>
+
+                                </div>
+
+                                <div class="transaction-btn">
+
+                                    <button class="btn-transaction">SEND</button>
+                                </div>
+                            </EditForm>
+
+                        </div>
+                        <div class="container-right-card">
+                            <div class="card-card">
+                                <div class="intern-card">
+                                    <img class="approximation-card" src="https://i.ibb.co/qdZb9xy/aprox.png" alt="aprox" border="0">
+
+                                    <div class="card-number-card">
+                                        <div class="number-vl-card">@formattedCardNumber</div>
+                                    </div>
+                                    <div class="card-holder-card">
+                                        <label>Holder</label>
+                                        <div class="name-vl-card">NOAH JACOB</div>
+                                    </div>
+                                    <div class="card-infos-card">
+                                        <div class="exp-card">
+                                            <label>valid-thru</label>
+                                            <div class="expiration-vl">02/40</div>
+                                        </div>
+                                        <div class="cvv-card">
+                                            <label>CVV</label>
+                                            <div class="cvv-vl">123</div>
+                                        </div>
+                                    </div>
+                                    <img class="chip-card" src="https://i.ibb.co/HpmzQbf/chip.png" alt="chip" border="0">
+
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </section>
+
+                </main>
+            </div>
+            <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
+        </main>
+    </div>*@
+
+
+<div class="">
+    <main class="container-card">
+        <section class="ui-card">
+            <div class="container-left-card">
+                <EditForm Model="preTransaction" class="credit-card-card" OnSubmit="SubmitHandler">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary class="text-danger" role="alert" />
+
+                    <div class="number-container-card">
+                        <label class="card-label">Card Number</label>
+                        <InputText @bind-Value="formattedCardNumber" class="card-number input" maxlength="19" placeholder="1234 5678 9101 1121" @oninput="OnCardNumberChanged"></InputText>
+
+                    </div>
+                    <div class="name-container-card">
+                        <label class="card-label">Sum</label>
+                        <InputNumber @bind-Value="preTransaction.Sum" class="input name-text" maxlength="30" placeholder="0.00"></InputNumber>
+
+                    </div>
+
+                    <div class="transaction-btn">
+
+                        <button class="btn-transaction">SEND</button>
+                    </div>
+                </EditForm>
+
+            </div>
+            <div class="container-right-card">
+                <div class="card-card">
+                    <div class="intern-card">
+                        <img class="approximation-card" src="https://i.ibb.co/qdZb9xy/aprox.png" alt="aprox" border="0">
+
+                        <div class="card-number-card">
+                            <div class="number-vl-card">@formattedCardNumber</div>
+                        </div>
+                        <div class="card-holder-card">
+                            <label>Holder</label>
+                            <div class="name-vl-card">NOAH JACOB</div>
+                        </div>
+                        <div class="card-infos-card">
+                            <div class="exp-card">
+                                <label>valid-thru</label>
+                                <div class="expiration-vl">02/40</div>
+                            </div>
+                            <div class="cvv-card">
+                                <label>CVV</label>
+                                <div class="cvv-vl">123</div>
+                            </div>
+                        </div>
+                        <img class="chip-card" src="https://i.ibb.co/HpmzQbf/chip.png" alt="chip" border="0">
+
+                    </div>
+                </div>
+
+
+            </div>
+
+        </section>
+
+    </main>
+</div>
+
+
+
+@code{
+    [Parameter]
+    public int AccountId { get; set; }
+    private PreTransaction preTransaction = new();
+    private BankAccount bankAccount = new();
+    public string CardNumber { get; set; }
+    private string formattedCardNumber = "";
+    private string message = null;
+
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        bankAccount = await _bankAccountService.GetAccountById(AccountId);
+
+    }
+
+
+
+
+    private void FormatCardNumber()
+    {
+        // Видалення пробілів з номеру картки та форматування його
+        string cleanedCardNumber = CardNumber.Replace(" ", "");
+        formattedCardNumber = string.Join(" ", Enumerable.Range(0, cleanedCardNumber.Length / 4)
+            .Select(i => cleanedCardNumber.Substring(i * 4, 4)));
+    }
+
+    private void OnCardNumberChanged(ChangeEventArgs e)
+    {
+        CardNumber = e.Value.ToString();
+        FormatCardNumber();
+    }
+
+    private string RemoveSpaces(string input)
+    {
+        return input.Replace(" ", "");
+    }
+
+    private async void SubmitHandler()
+    {
+
+        if (IsNumeric(RemoveSpaces(formattedCardNumber)))
+        {
+            preTransaction.CardNumber = RemoveSpaces(formattedCardNumber);
+            var result = await _bankAccountService.Transaction(AccountId, preTransaction);
+            if (result == "Success")
+            {
+                _navManager.NavigateTo($"/home/{bankAccount.Email}");
+                message = null;
+            }
+            if (result == "Card is not correct")
+            {
+
+                message = "Card is not correct.Try again";
+
+                _navManager.NavigateTo($"/transaction/{AccountId}/{message}");
+
+            }
+            if (result == "You have not enough money for operation")
+            {
+
+                message = "You have not enough money for operation";
+                _navManager.NavigateTo($"/transaction/{AccountId}/{message}");
+            }
+
+        }
+        else
+        {
+            message = "Try again";
+
+            ShowMessage(ToastType.Danger);
+        }
+
+
+    }
+
+    private bool IsNumeric(string input)
+    {
+        return input.All(char.IsDigit);
+    }
+
+
+
+
+    List<ToastMessage> messages = new List<ToastMessage>();
+
+    private void ShowMessage(ToastType toastType) => messages.Add(CreateToastMessage(toastType));
+
+    private ToastMessage CreateToastMessage(ToastType toastType)
+    => new ToastMessage
+    {
+        Type = toastType,
+        Title = "Transfer money",
+        HelpText = $"{DateTime.Now}",
+        Message = $"Transfer money. DateTime: {DateTime.Now}",
+    };
+
+
+    private async Task Logout()
+    {
+        var customAuthStateProvider = (FPSBank.Client.Authentication.CustomAuthenticationStateProvider)authStateProvider;
+        await customAuthStateProvider.UpdateAuthenticationState(null);
+        _navManager.NavigateTo("/", true);
+    }
+}
